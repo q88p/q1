@@ -1,5 +1,12 @@
 #Reference https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/ses-examples-sending-email.html
 
+var args = process.argv.slice(2);
+
+if (!args[0] || !args[1] || !args[2]) {
+  console.log("usage: node configuration_set_name sender@example.com destination@example.com")
+  return;
+}
+
 // Load the AWS SDK for Node.js
 var AWS = require('aws-sdk');
 // Set the region
@@ -7,14 +14,10 @@ AWS.config.update({region: 'eu-north-1'});
 
 // Create sendEmail params
 var params = {
-  ConfigurationSetName: 'SES-Logging-Configuration-Set',
+  ConfigurationSetName: args[0],
   Destination: {
     ToAddresses: [
-      'success@simulator.amazonses.com',
-      'bounce@simulator.amazonses.com',
-      'ooto@simulator.amazonses.com',
-      'complaint@simulator.amazonses.com',
-      'suppressionlist@simulator.amazonses.com'
+      args[2]
     ]
   },
   Message: {
@@ -33,9 +36,9 @@ var params = {
       Data: 'Test email'
      }
     },
-  Source: process.env.MY_EMAIL,
+  Source: args[1],
   ReplyToAddresses: [
-     process.env.MY_EMAIL
+     args[1]
   ],
 };
 
